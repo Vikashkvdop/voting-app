@@ -31,17 +31,18 @@ app.use('/api',router);
 app.use(notFound)
 app.use(errorHandler)
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "./client/dist")));
+  app.get(/^\/(?!api).*/, (req, res) => {
+    res.sendFile(path.join(__dirname, "./client/dist", "index.html"));
+  });
+}
+
+
 //connect database
 connect();
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "./client/dist")));
 
-  // Only handle non-API routes
-  app.get(/^\/(?!api).*/, (req, res) => {
-    res.sendFile(path.join(__dirname, "./client", "dist", "index.html"));
-  });
-}
 
 
 app.listen(process.env.PORT,()=>console.log(`Server started at ${process.env.PORT}`))
