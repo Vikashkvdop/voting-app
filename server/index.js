@@ -29,17 +29,17 @@ app.use(upload());
 // API routes
 app.use('/api', router);
 
-// ✅ Serve frontend in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, './client/dist')));
+//  Serve frontend in production
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "./client/dist")));
 
-  // Serve index.html for any non-API route
+  // Only handle non-API routes
   app.get(/^\/(?!api).*/, (req, res) => {
-    res.sendFile(path.join(__dirname, './client/dist/index.html'));
+    res.sendFile(path.join(__dirname, "./client", "dist", "index.html"));
   });
 }
 
-// ❌ These must come LAST
+// These must come LAST
 app.use(notFound);
 app.use(errorHandler);
 
