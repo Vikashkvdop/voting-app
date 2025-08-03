@@ -7,13 +7,17 @@ const notFound = (req, res, next) => {
 };
 
 const errorHandler = (error, req, res, next) => {
-  if (res.headerSent) {
+  if (res.headersSent) {
     return next(error);
   }
-  res.status(error.code || 500).json({
-    message: error.message || "An unknown error occurred."
+
+  // Use error.statusCode if it's a number; otherwise, fallback to 500
+  const statusCode = typeof error.statusCode === 'number' ? error.statusCode : 500;
+
+  res.status(statusCode).json({
+    message: error.message || 'An unknown error occurred.',
+    stack: process.env.NODE_ENV === 'production' ? null : error.stack,
   });
 };
-
 
 export { notFound, errorHandler };
